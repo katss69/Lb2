@@ -1,0 +1,21 @@
+from bottle import Bottle, request, response, run
+
+app = Bottle()
+
+@app.route('/get_data', method='GET')
+def get_data():
+    content_type = request.get_header('Content-Type', 'text/plain')
+
+    data = {"message": "Hello, world!"}  # для JSON
+
+    if content_type == 'application/json':
+        response.content_type = 'application/json'
+        return {'message': data['message']}
+    elif content_type == 'application/xml':
+        xml_data = f'<?xml version="1.0" encoding="UTF-8"?><message>{data["message"]}</message>'
+        response.content_type = 'application/xml'
+        return xml_data
+    else:
+        return "Hello, world!"  # Звичайний текст
+
+run(app, host='localhost', port=8000)
